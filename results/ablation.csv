@@ -1,0 +1,11 @@
+scenario,model,n_features,cv_roc_auc,cv_std,test_roc_auc,test_pr_auc
+1. Full model (as in model.py),Logistic Regression,39,0.784,0.013,0.781,0.639
+1. Full model (as in model.py),Random Forest,39,0.8,0.018,0.807,0.719
+"2. Full model, no missing-value indicators",Logistic Regression,39,0.781,0.017,0.778,0.641
+"2. Full model, no missing-value indicators",Random Forest,39,0.799,0.02,0.807,0.719
+"3. Without reporter type, US origin and year",Logistic Regression,36,0.752,0.012,0.749,0.619
+"3. Without reporter type, US origin and year",Random Forest,36,0.771,0.012,0.774,0.688
+"4. Clinical content only (reactions, counts, drug class)",Logistic Regression,33,0.736,0.02,0.724,0.603
+"4. Clinical content only (reactions, counts, drug class)",Random Forest,33,0.744,0.017,0.735,0.641
+"5. Non-clinical only (reporter, origin, year, age, weight, sex)",Logistic Regression,6,0.727,0.016,0.737,0.556
+"5. Non-clinical only (reporter, origin, year, age, weight, sex)",Random Forest,6,0.73,0.021,0.749,0.624

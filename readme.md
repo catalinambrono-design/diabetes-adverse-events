@@ -71,9 +71,8 @@ harmonised version of FAERS.
 
 **Extraction criteria:**
 - Reports received by the FDA between **1 January 2020 and 31 December 2024**
-- The **5,000 most recent reports per drug**
-- Only reports where the study drug is listed as a **suspect** drug (not merely concomitant)
-- Reports where more than one study drug is suspect are excluded, to keep drug classes comparable
+- A stratified sample: the **250 most recent reports in each of the 20 calendar quarters**
+  (up to 5,000 per drug), so that every year is represented
 
 **Key fields used:**
 
@@ -91,23 +90,24 @@ harmonised version of FAERS.
 
 | Step | Reports |
 |---|---|
-| Downloaded (5,000 most recent per drug) | 20,000 |
+| Downloaded (up to 250 per quarter per drug) | 20,000 |
 | After removing duplicates | 20,000 |
-| Study drug listed as suspect | 8,976 |
-| Only one study drug suspect (final dataset) | **8,348** |
+| Study drug listed as suspect | 9,233 |
+| Only one study drug suspect (final dataset) | **8,552** |
 
-**Final dataset:** 8,348 reports and 33,061 report-reaction pairs.
+**Final dataset:** 8,552 reports and 30,565 report-reaction pairs.
 
 | Drug | Matching reports in FAERS (2020–2024) | Reports in final dataset |
 |---|---|---|
-| Metformin | 138,742 | 1,365 |
-| Sitagliptin | 24,069 | 1,499 |
-| Empagliflozin | 40,826 | 2,106 |
-| Semaglutide | 38,208 | 3,378 |
+| Metformin | 138,742 | 1,297 |
+| Sitagliptin | 24,069 | 1,496 |
+| Empagliflozin | 40,826 | 2,732 |
+| Semaglutide | 38,208 | 3,027 |
 
-Only 27% of downloaded metformin reports listed it as a suspect drug, compared with 68%
-for semaglutide. This reflects metformin's role as first-line background therapy: it is
-frequently recorded as a concomitant medication in reports concerning other drugs.
+Of the 5,000 reports downloaded per drug, about 26% (metformin) and 30% (sitagliptin) ended up
+in the final dataset, against 55% (empagliflozin) and 61% (semaglutide). This is consistent with
+metformin's role as first-line background therapy, which is often recorded as a concomitant
+medication in reports about other drugs.
 
 ## 5. Methodology
 
@@ -250,23 +250,23 @@ The reaction profile also changes markedly with age:
 
 | Drug class | Reports | Serious (%) | Hospitalised (%) | Death (%) | Median age | Female (%) | Reported by HCP (%) |
 |---|---|---|---|---|---|---|---|
-| Biguanide | 1,365 | 87.2 | 42.1 | 19.6 | 66 | 43.4 | 83.2 |
-| DPP-4 inhibitor | 1,499 | 72.2 | 37.2 | 4.0 | 70 | 48.0 | 63.9 |
-| GLP-1 receptor agonist | 3,378 | 84.0 | 35.4 | 2.6 | 61 | 60.7 | 29.9 |
-| SGLT2 inhibitor | 2,106 | 68.0 | 38.9 | 6.2 | 70 | 34.4 | 61.0 |
+| Biguanide | 1,297 | 91.6 | 49.0 | 18.9 | 65 | 45.2 | 76.7 |
+| DPP-4 inhibitor | 1,496 | 68.9 | 35.2 | 5.1 | 70 | 45.3 | 62.4 |
+| GLP-1 receptor agonist | 3,027 | 86.5 | 34.1 | 3.2 | 62 | 58.6 | 42.6 |
+| SGLT2 inhibitor | 2,732 | 59.3 | 30.5 | 5.1 | 67 | 42.2 | 48.3 |
 
-- **Metformin** reports have the highest proportion of serious outcomes (87.2%) and deaths
-  (19.6%), and 83% were submitted by healthcare professionals. Because metformin is usually
-  background therapy, it is likely recorded as the *suspect* drug mainly in severe clinical
-  cases such as lactic acidosis. This is a selection effect, not evidence that metformin is
-  the most dangerous drug in the group.
-- **GLP-1 receptor agonist** reports differ markedly: patients are younger (median 61),
-  more often female (60.7%) and reports come mostly from consumers (only 29.9% from
-  healthcare professionals), consistent with widespread use for weight management. Despite
-  a high proportion of serious reports (84.0%), they have the lowest hospitalisation (35.4%)
-  and death (2.6%) rates.
-- **SGLT2 inhibitor** reports have the lowest proportion of serious outcomes (68.0%) and the
-  lowest share of female patients (34.4%).
+The overall hospitalisation rate is 35.4%.
+
+- **Metformin** reports have the highest proportion of serious outcomes (91.6%),
+  hospitalisations (49.0%) and deaths (18.9%), and 77% were submitted by healthcare
+  professionals. Because metformin is usually background therapy, it is likely recorded as the
+  *suspect* drug mainly in severe clinical cases such as lactic acidosis. This is a selection
+  effect, not evidence that metformin is the most dangerous drug in the group.
+- **GLP-1 receptor agonist** reports come from the youngest patients (median 62), are the
+  most often female (58.6%) and have the lowest share of healthcare-professional reporters
+  (42.6%, versus 48–77% in the other classes) and the lowest death rate (3.2%).
+- **SGLT2 inhibitor** reports have the lowest proportion of serious outcomes (59.3%) and of
+  hospitalisations (30.5%).
 
 ![Hospitalisation by age and class](figures/06_hospitalization_by_age_and_class.png)
 
@@ -317,18 +317,18 @@ of reports:
 
 | Model | CV ROC-AUC | Test ROC-AUC | Test PR-AUC | Precision | Recall | F1 |
 |---|---|---|---|---|---|---|
-| Logistic Regression | 0.778 ± 0.012 | 0.787 | 0.679 | 0.594 | **0.715** | 0.649 |
-| Random Forest | **0.810 ± 0.010** | **0.822** | **0.753** | **0.629** | 0.704 | **0.665** |
-| *Random baseline* | 0.50 | 0.50 | 0.377 | – | – | – |
+| Logistic Regression | 0.784 ± 0.013 | 0.781 | 0.639 | 0.573 | 0.727 | 0.641 |
+| Random Forest | 0.800 ± 0.018 | **0.807** | **0.719** | **0.584** | **0.734** | **0.651** |
+| *Random baseline* | 0.50 | 0.50 | 0.354 | – | – | – |
+
 
 ![ROC and PR curves](figures/09_roc_pr_curves.png)
 
-- **Random Forest performed best**, with a test ROC-AUC of 0.82 and a PR-AUC of 0.75,
-  roughly double the random baseline of 0.38 (the hospitalisation prevalence).
-- Its precision-recall curve lies above the logistic regression curve across almost the
-  entire recall range, with the largest advantage at low recall, where the model is most confident.
-- Cross-validation and test scores are very close for both models, indicating stable
-  performance without overfitting.
+- The **Random Forest performed best**, with a test ROC-AUC of 0.81 and a PR-AUC of 0.72,
+  about twice the random baseline of 0.35 (the hospitalisation prevalence).
+- The advantage over logistic regression is modest in ROC-AUC (0.026, comparable to the
+  fold-to-fold variation of 0.013–0.018) and clearer in PR-AUC (0.719 vs 0.639).
+- Cross-validation and test scores are close for both models, indicating stable performance.
 
 ![Confusion matrices](figures/10_confusion_matrices.png)
 
@@ -363,6 +363,43 @@ The Random Forest permutation importance highlights a different but complementar
 This contrast is an important lesson: the model relies heavily on *how* and *by whom* an event
 was reported, not only on *what* happened. This is expected for spontaneous reporting data and
 reinforces that the model captures reporting patterns, not clinical risk.
+
+### 9.6 Robustness checks
+
+![Reports by year](figures/13_reports_by_year.png)
+
+**Time coverage.** An earlier version of this analysis downloaded the 5,000 most recent reports
+per drug. A check showed that 95% of them were from 2024 and that the time window ranged from
+75 to 488 days depending on the drug, so the sampling was changed to 250 reports per quarter.
+In the final dataset each year contributes 19–21% of reports and every drug class spans about
+1,750 days. This even distribution is a result of the design, so reporting volumes over time
+cannot be analysed. The hospitalisation rate was 34–36% in 2020–2023 and 38.3% in 2024; this
+modest increase may partly reflect the changing mix of drug classes, which I did not test.
+In the earlier version the Random Forest reached a test ROC-AUC of 0.82, versus 0.81 here.
+
+![Ablation study](figures/14_ablation.png)
+
+**Ablation study.** To test how much of the model's performance comes from report content
+versus reporting characteristics, both models were retrained on feature subsets using the same
+split.
+
+| Feature set | Random Forest (test ROC-AUC) | Logistic Regression (test ROC-AUC) |
+|---|---|---|
+| Full model | 0.807 | 0.781 |
+| Without missing-value indicators | 0.807 | 0.778 |
+| Without reporter type, US origin and year | 0.774 | 0.749 |
+| Content only (reactions, counts, drug class) | 0.735 | 0.724 |
+| Reporting/demographic only (reporter, origin, year, age, weight, sex) | 0.749 | 0.737 |
+
+- Report-content features and reporting/demographic features each reach a ROC-AUC of about
+  0.74–0.75 on their own (random = 0.50), and combining them gives 0.81. The model therefore
+  captures both *what* was reported and *how* it was reported, and the two sets of features
+  overlap partly.
+- Removing reporter type, US origin and year costs about 0.03 AUC.
+- Missing-value indicators added nothing (0.000 for the Random Forest), so there is no evidence
+  that missingness itself is informative.
+- With 1,711 test reports, differences below about 0.02 AUC should not be over-interpreted,
+  including the gap between the two subsets.
 
 ## 10. Conclusions
 
@@ -402,8 +439,10 @@ FAERS data must be interpreted with care. The main limitations are:
   omission issue*) describe medication-use issues rather than physiological reactions.
 - **Heatmap term selection.** Selecting the top terms across all classes favours the largest
   class (GLP-1), so class-specific signals may be under-represented in the heatmaps.
-- **Sampling.** The most recent reports per drug were used, which is not a random sample
-  of all FAERS reports.
+- **Sampling.** The 250 most recent reports in each quarter were used per drug. Allocation is
+  equal across quarters regardless of reporting volume, and the most recent reports within a
+  quarter are taken, so the sample is not random and cannot be used to study trends in
+  reporting volume.
 - **Possible duplicates.** The same case may be submitted by different reporters under
   different report IDs.
 - **What the model predicts.** The model predicts whether a *report* mentions hospitalisation,
@@ -416,7 +455,6 @@ FAERS data must be interpreted with care. The main limitations are:
 - Class-specific term selection for the heatmaps, so smaller classes are represented fairly
 - Filtering semaglutide reports by indication (diabetes vs weight management)
 - Separating clinical reactions from medication-use issues in the MedDRA terms
-- Time-trend analysis of reporting volumes
 - Gradient boosting models, probability calibration and SHAP explanations
 - An interactive dashboard (e.g. Streamlit) for exploring reactions by drug
 - An equivalent implementation in R / tidyverse or SAS

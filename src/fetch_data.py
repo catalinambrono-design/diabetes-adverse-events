@@ -17,46 +17,46 @@ BASE_URL = "https://api.fda.gov/drug/event.json"
 API_KEY = os.getenv("OPENFDA_API_KEY")
 
 
-def build_query(drug: str) -> str:
-    """Search reports mentioning the drug, received within the date window."""
-    return f'patient.drug.openfda.generic_name:"{drug}" AND receivedate:{DATE_RANGE}'
+QUARTERS = [(y, m) for y in range(2020, 2025) for m in (1, 4, 7, 10)]
+PER_QUARTER = 250   # 20 quarters x 250 = 5,000 reports per drug
 
 
-def fetch_drug(drug: str) -> dict:
-    """Page through the API and return the raw reports plus the total match count."""
-    records, skip, total = [], 0, 0
+def quarter_window(year: int, start_month: int) -> str:
+    end_month = start_month + 2
+    end_day = {3: 31, 6: 30, 9: 30, 12: 31}[end_month]
+    return f"[{year}{start_month:02d}01 TO {year}{end_month:02d}{end_day}]"
 
-    while skip < MAX_RECORDS_PER_DRUG:
-        params = {
-            "search": build_query(drug),
-            "limit": PAGE_SIZE,
-            "skip": skip,
-            "sort": "receivedate:desc",   # deterministic order: most recent first
-        }
-        if API_KEY:
-            params["api_key"] = API_KEY
 
+def fetch_quarter(drug: str, window: str) -> tuple[list, int]:
+    """Most recent PER_QUARTER reports inside one quarter, plus the quarter's total."""
+    params = {
+        "search": f'patient.drug.openfda.generic_name:"{drug}" AND receivedate:{window}',
+        "limit": PER_QUARTER,
+        "sort": "receivedate:desc",
+    }
+    if API_KEY:
+        params["api_key"] = API_KEY
+    while True:
         response = requests.get(BASE_URL, params=params, timeout=60)
-
-        if response.status_code == 404:          # no (more) matching results
-            break
-        if response.status_code == 429:          # rate limited: wait and retry
+        if response.status_code == 404:
+            return [], 0
+        if response.status_code == 429:
             print("  Rate limit reached, waiting 60 s...")
             time.sleep(60)
             continue
         response.raise_for_status()
-
         payload = response.json()
-        batch = payload.get("results", [])
-        total = payload["meta"]["results"]["total"]
+        return payload.get("results", []), payload["meta"]["results"]["total"]
+
+
+def fetch_drug(drug: str) -> dict:
+    records, total = [], 0
+    for year, month in QUARTERS:
+        batch, n_total = fetch_quarter(drug, quarter_window(year, month))
         records.extend(batch)
-        print(f"  {drug}: {len(records):,} / {min(total, MAX_RECORDS_PER_DRUG):,}")
-
-        skip += PAGE_SIZE
-        if not batch or skip >= total:
-            break
-        time.sleep(0.5)                          # be polite to the API
-
+        total += n_total
+        time.sleep(0.5)
+    print(f"  {drug}: {len(records):,} reports downloaded across {len(QUARTERS)} quarters")
     return {"meta_total": total, "results": records}
 
 

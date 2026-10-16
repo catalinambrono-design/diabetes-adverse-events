@@ -1,5 +1,5 @@
 drug_class,reports,serious_pct,hospitalized_pct,death_pct,median_age,female_pct,hcp_reporter_pct
-Biguanide,1365,87.2,42.1,19.6,66.0,43.4,83.2
-DPP-4 inhibitor,1499,72.2,37.2,4.0,70.0,48.0,63.9
-GLP-1 receptor agonist,3378,84.0,35.4,2.6,61.0,60.7,29.9
-SGLT2 inhibitor,2106,68.0,38.9,6.2,70.0,34.4,61.0
+Biguanide,1297,91.6,49.0,18.9,65.0,45.2,76.7
+DPP-4 inhibitor,1496,68.9,35.2,5.1,70.0,45.3,62.4
+GLP-1 receptor agonist,3027,86.5,34.1,3.2,62.0,58.6,42.6
+SGLT2 inhibitor,2732,59.3,30.5,5.1,67.0,42.2,48.3
